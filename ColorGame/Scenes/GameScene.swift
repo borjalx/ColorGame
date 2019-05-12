@@ -27,8 +27,16 @@ class GameScene: SKScene {
     
     //bola de colores
     var colorSwtich: SKSpriteNode!
+    //estado inicial de la rueda de colores
     var switchState = SwitchState.red
+    //nº de índice inicial del color
     var currentColorIndex: Int?
+    //puntuación de la partida
+    var score = 0
+    
+    //labels
+    //puntuacion
+    let scoreLabel = SKLabelNode(text: "0")
     
     override func didMove(to view: SKView) {
         
@@ -40,8 +48,8 @@ class GameScene: SKScene {
     //Función que configura las físicas
     func setupPhysics(){
         //reducimos la gravedad
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: -2.0)
-        
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: -1.0)
+        //delegamos el contacto a la propia escena
         physicsWorld.contactDelegate = self
     }
     
@@ -63,8 +71,25 @@ class GameScene: SKScene {
         //añadimos el nodo
         addChild(colorSwtich)
         
+        
+        //modificamos la fuente del label
+        scoreLabel.fontName = "HolyFat"
+        //tamaño de la fuente
+        scoreLabel.fontSize = 60.0
+        //color de la fuente
+        scoreLabel.fontColor = UIColor.white
+        //posición del label
+        scoreLabel.position = CGPoint(x: frame.midX, y: frame.midY)
+        //añadimos el label de la puntuación a la scene
+        addChild(scoreLabel)
+        
         //creamos la bola
         createBall()
+    }
+    
+    //Función que actualiza el label de la puntuación
+    func updateScoreLabel()  {
+        scoreLabel.text  = "\(score)"
     }
     
     //Función que crea la bola
@@ -103,6 +128,7 @@ class GameScene: SKScene {
     
     //función de partida finalizada
     func gameOver(){
+        
         print("Game Over")
     }
     
@@ -122,12 +148,17 @@ extension GameScene: SKPhysicsContactDelegate {
             if let ball = contact.bodyA.node?.name == "Ball" ? contact.bodyA.node as? SKSpriteNode : contact.bodyB.node as? SKSpriteNode{
                 //comprobamos si la bola y la rueda son del mismo color
                 if currentColorIndex == switchState.rawValue {
-                    print("Correct!")
+                    //aumentamos la puntuación
+                    score += 1
+                    //actualizamos el scoreLabel
+                    updateScoreLabel()
+                    //eliminamos la bola y creamos otra
                     ball.run(SKAction.fadeOut(withDuration: 0.25), completion: {
                         ball.removeFromParent()
                         self.createBall()
                     })
                 } else {
+                    //no han coincidido, perdemos.
                     gameOver()
                 }
             }
