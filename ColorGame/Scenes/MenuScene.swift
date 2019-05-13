@@ -38,6 +38,8 @@ class MenuScene: SKScene {
         playLabel.fontColor = UIColor.white
         //añadimos el label
         addChild(playLabel)
+        //animamos el label
+        animation(label: playLabel)
         
         //label con la máxima puntuación
         let maxScore = SKLabelNode(text: "Max. score: " + "\(UserDefaults.standard.integer(forKey: "MaxScore"))")
@@ -62,7 +64,20 @@ class MenuScene: SKScene {
         addChild(actualScore)
     }
     
+    //Función que anima un label con efectos
+    func animation(label:SKLabelNode) {
+        //hacemos el texto más grande
+        let scaleUP = SKAction.scale(to: 1.1, duration: 0.6)
+        //hacemos el texo más pequeño - vuelta estado normal
+        let scaleDown = SKAction.scale(to: 1.0, duration: 0.6)
+        //creamos sequence con las SKActions
+        let sequence = SKAction.sequence([scaleUP, scaleDown])
+        //el label ejecuta las acciones
+        label.run(sequence)
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        //cuando el suuario toque la pantalla cambiamos la escena al juego
         let gameScene = GameScene(size: view!.bounds.size)
         view!.presentScene(gameScene)
     }

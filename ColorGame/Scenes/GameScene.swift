@@ -137,6 +137,8 @@ class GameScene: SKScene {
     
     //función de partida finalizada
     func gameOver(){
+        //sonido
+        run(SKAction.playSoundFileNamed("fail", waitForCompletion: true))
         //guardamos la puntuación en user defaults
         UserDefaults.standard.set(score, forKey: "ActualScore")
         //comprobamos si es la máxima puntuación
@@ -166,6 +168,8 @@ extension GameScene: SKPhysicsContactDelegate {
             if let ball = contact.bodyA.node?.name == "Ball" ? contact.bodyA.node as? SKSpriteNode : contact.bodyB.node as? SKSpriteNode{
                 //comprobamos si la bola y la rueda son del mismo color
                 if currentColorIndex == switchState.rawValue {
+                    //sonido
+                    run(SKAction.playSoundFileNamed("blop", waitForCompletion: false))
                     //aumentamos la puntuación
                     score += 1
                     //actualizamos el scoreLabel
