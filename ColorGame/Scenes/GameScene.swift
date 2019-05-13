@@ -63,6 +63,8 @@ class GameScene: SKScene {
         colorSwtich.size = CGSize(width: frame.size.width/4, height: frame.size.width/4)
         //posición del nodo
         colorSwtich.position = CGPoint(x: frame.midX, y: frame.minY + colorSwtich.size.height)
+        //posición z
+        colorSwtich.zPosition = ZPositions.colorSwitch
         //añadimos físicas al colorSwitch
         colorSwtich.physicsBody = SKPhysicsBody(circleOfRadius: colorSwtich.size.width/2)
         colorSwtich.physicsBody?.categoryBitMask = PhysicsCategories.switchCategory
@@ -80,6 +82,8 @@ class GameScene: SKScene {
         scoreLabel.fontColor = UIColor.white
         //posición del label
         scoreLabel.position = CGPoint(x: frame.midX, y: frame.midY)
+        //posición z
+        scoreLabel.zPosition = ZPositions.label
         //añadimos el label de la puntuación a la scene
         addChild(scoreLabel)
         
@@ -110,6 +114,10 @@ class GameScene: SKScene {
         ball.physicsBody?.categoryBitMask = PhysicsCategories.ballCategory
         ball.physicsBody?.contactTestBitMask = PhysicsCategories.switchCategory
         ball.physicsBody?.collisionBitMask = PhysicsCategories.none
+        
+        //posicion Z
+        ball.zPosition = ZPositions.ball
+        
         addChild(ball)
     }
     
@@ -123,6 +131,7 @@ class GameScene: SKScene {
             switchState = .red
         }
         
+        //rotamos la bola hasta el próximo color (1/4+-)
         colorSwtich.run(SKAction.rotate(byAngle: .pi / 2, duration: 0.25))
     }
     
