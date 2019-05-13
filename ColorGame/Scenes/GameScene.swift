@@ -33,6 +33,8 @@ class GameScene: SKScene {
     var currentColorIndex: Int?
     //puntuación de la partida
     var score = 0
+    //gravedad de la bola
+    var gravity: CGFloat = -1.0  //default -9.8
     
     //labels
     //puntuacion
@@ -48,7 +50,9 @@ class GameScene: SKScene {
     //Función que configura las físicas
     func setupPhysics(){
         //reducimos la gravedad
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: -1.0)
+        //physicsWorld.gravity = CGVector(dx: 0.0, dy: gravity)
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravity)
+
         //delegamos el contacto a la propia escena
         physicsWorld.contactDelegate = self
     }
@@ -94,6 +98,16 @@ class GameScene: SKScene {
     //Función que actualiza el label de la puntuación
     func updateScoreLabel()  {
         scoreLabel.text  = "\(score)"
+    }
+    
+    //función que actualiza la gravedad del juego
+    func updateGravity(){
+        //si la puntuación del usuario es múltiplo de 10
+        if score % 10 == 0 {
+            //aumentamos la gravedad 0.5
+            gravity = gravity + (0.5 * (CGFloat(score)/10.0))
+        }
+        
     }
     
     //Función que crea la bola
@@ -172,6 +186,8 @@ extension GameScene: SKPhysicsContactDelegate {
                     run(SKAction.playSoundFileNamed("blop", waitForCompletion: false))
                     //aumentamos la puntuación
                     score += 1
+                    //actualizamos la gravedad
+                    updateGravity()
                     //actualizamos el scoreLabel
                     updateScoreLabel()
                     //eliminamos la bola y creamos otra
