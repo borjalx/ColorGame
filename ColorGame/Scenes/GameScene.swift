@@ -137,8 +137,17 @@ class GameScene: SKScene {
     
     //función de partida finalizada
     func gameOver(){
-        
-        print("Game Over")
+        //guardamos la puntuación en user defaults
+        UserDefaults.standard.set(score, forKey: "ActualScore")
+        //comprobamos si es la máxima puntuación
+        if score > UserDefaults.standard.integer(forKey: "MaxScore") {
+            //actualizamos la máxima puntuación
+            UserDefaults.standard.set(score, forKey: "MaxScore")
+        }
+        //creamos una MenuScene
+        let menuScene = MenuScene(size: view!.bounds.size)
+        //accedemos a la escena
+        view!.presentScene(menuScene)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
